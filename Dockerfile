@@ -2,7 +2,6 @@ FROM ros:humble
 
 RUN apt update && apt install -y \
     sudo \
-    ros-humble-rviz2 \
     ros-humble-foxglove-bridge \
     ros-humble-robot-state-publisher \
     ros-humble-joint-state-publisher
@@ -24,4 +23,4 @@ SHELL ["/bin/bash", "-c"]
 RUN touch ~/.bashrc \
     && echo ". /opt/ros/humble/setup.bash" >> ~/.bashrc
 
-WORKDIR /workspaces/visualizer
+WORKDIR /workspaces/visualizer/ros2_ws

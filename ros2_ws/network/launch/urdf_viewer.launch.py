@@ -1,28 +1,35 @@
+from pathlib import Path
+
 import launch
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, LogInfo
+from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-from launch.actions import LogInfo
+
 
 def generate_launch_description():
-    urdf_path = LaunchConfiguration('urdf_path', default='/workspaces/urdf-testing/ros2_ws/robot.urdf')
+    workspace_path = Path("/workspaces") / "urdf-testing" / "ros2_ws"
+    urdf_directory = workspace_path / "network" / "urdf"
+    urdf_path = urdf_directory / "robot.urdf"
 
-    return LaunchDescription([
-        DeclareLaunchArgument('urdf_path', description='Path to the URDF file'),
+    with open(urdf_path) as urdf_file_handle:
+        urdf_contents = urdf_file_handle.read()
 
-        Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            name='robot_state_publisher',
-            parameters=[{'robot_description': Command(['xacro ', urdf_path])}],
-            output='screen',
-        ),
-
-        Node(
-            package='joint_state_publisher',
-            executable='joint_state_publisher',
-            name='joint_state_publisher',
-            output='screen',
-        ),
-    ])
+    return LaunchDescription(
+        [
+            Node(
+                package="robot_state_publisher",
+                executable="robot_state_publisher",
+                name="robot_state_publisher",
+                parameters=[{"robot_description": urdf_contents}],
+                output="screen",
+            ),
+            Node(
+                package="joint_state_publisher",
+                executable="joint_state_publisher",
+                name="joint_state_publisher",
+                source_list=["/faked_joints"],
+                output="screen",
+            ),
+        ]
+    )
