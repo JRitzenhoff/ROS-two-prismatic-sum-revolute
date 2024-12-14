@@ -1,8 +1,11 @@
 FROM ros:humble
 
 RUN apt update && apt install -y \
+    sudo \
     ros-humble-rviz2 \
-    sudo
+    ros-humble-foxglove-bridge \
+    ros-humble-robot-state-publisher \
+    ros-humble-joint-state-publisher
 
 # Create the user
 ARG USERNAME=vscode
@@ -19,6 +22,6 @@ USER ${USERNAME}:${USERNAME}
 SHELL ["/bin/bash", "-c"]
 
 RUN touch ~/.bashrc \
-    && echo ". /ros_entrypoint.sh" >> ~/.bashrc
+    && echo ". /opt/ros/humble/setup.bash" >> ~/.bashrc
 
 WORKDIR /workspaces/visualizer
