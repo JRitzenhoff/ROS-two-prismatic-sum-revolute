@@ -23,4 +23,4 @@ SHELL ["/bin/bash", "-c"]
 RUN touch ~/.bashrc \
     && echo ". /opt/ros/humble/setup.bash" >> ~/.bashrc
 
-WORKDIR /workspaces/visualizer/ros2_ws
+WORKDIR /workspaces/urdf-testing/ros2_ws

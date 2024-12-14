@@ -22,9 +22,9 @@
     // Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
     "remoteUser": "vscode",
     // See https://containers.dev/implementors/json_reference/ for configuration reference
-    "mounts": [
-        "source=.,target=/workspaces/visualizer,type=bind"
-    ],
+    // "mounts": [
+    //     "source=.,target=/workspaces/urdf-testing,type=bind"
+    // ],
     // Used for X11 forwarding if XQuartz is installed
     // "containerEnv": {
     //     "DISPLAY": "docker.for.mac.host.internal:0"
@@ -41,7 +41,8 @@
             },
             "extensions": [
                 "esbenp.prettier-vscode",
-                "ms-python.black-formatter"
+                "ms-python.black-formatter",
+                "redhat.vscode-xml"
             ]
         }
     }
