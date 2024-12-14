@@ -18,6 +18,7 @@ USER ${USERNAME}:${USERNAME}
 
 SHELL ["/bin/bash", "-c"]
 
-WORKDIR /workspaces/visualizer
+RUN touch ~/.bashrc \
+    && echo ". /ros_entrypoint.sh" >> ~/.bashrc
 
-CMD ["." "/ros_entrypoint.sh"]
+WORKDIR /workspaces/visualizer
