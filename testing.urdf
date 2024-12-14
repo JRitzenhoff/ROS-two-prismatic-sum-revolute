@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<robot name="rectangle_with_pillars_and_rotated_cylinders_and_rectangles">
+
+  <!-- Base link (Rectangle) -->
+  <link name="base">
+    <visual>
+      <geometry>
+        <box size="2 0.5 0.1"/>  <!-- Length: 2m, Width: 0.5m, Height: 0.1m -->
+      </geometry>
+      <material name="grey"/>
+    </visual>
+  </link>
+
+  <!-- Pillar 1 (left side) -->
+  <link name="pillar_left">
+    <visual>
+      <geometry>
+        <box size="0.1 0.1 2"/>  <!-- Width: 0.1m, Depth: 0.1m, Height: 2m -->
+      </geometry>
+      <material name="pillar_left_color"/>
+      <origin xyz="0 0 1" rpy="0 0 0"/> 
+    </visual>
+  </link>
+
+  <!-- Pillar 2 (right side) -->
+  <link name="pillar_right">
+    <visual>
+      <geometry>
+        <box size="0.1 0.1 2"/>  <!-- Width: 0.1m, Depth: 0.1m, Height: 2m -->
+      </geometry>
+      <material name="pillar_right_color"/>
+      <origin xyz="0 0 1" rpy="0 0 0"/> 
+    </visual>
+  </link>
+
+  <!-- Cylinder 1 (left pillar) -->
+  <link name="cylinder_left">
+    <visual>
+      <geometry>
+        <cylinder radius="0.15" length="0.2"/>  <!-- Radius: 0.15m, Length: 0.2m -->
+      </geometry>
+      <material name="cylinder_left_color"/>
+      <!-- Rotate the cylinder to align its Z-axis with the Y-axis of the base -->
+      <origin xyz="0 0 0" rpy="1.5707 0 0"/> <!-- 90 degrees around the X-axis -->
+    </visual>
+  </link>
+
+  <!-- Cylinder 2 (right pillar) -->
+  <link name="cylinder_right">
+    <visual>
+      <geometry>
+        <cylinder radius="0.15" length="0.2"/>  <!-- Radius: 0.15m, Length: 0.2m -->
+      </geometry>
+      <material name="cylinder_right_color"/>
+      <!-- Rotate the cylinder to align its Z-axis with the Y-axis of the base -->
+      <origin xyz="0 0 0" rpy="1.5707 0 0"/> <!-- 90 degrees around the X-axis -->
+    </visual>
+  </link>
+
+  <!-- New Rectangular Link 1 (attached to left cylinder) -->
+  <link name="rectangle_left">
+    <visual>
+      <geometry>
+        <box size="0.5 0.1 0.1"/>  <!-- Width: 0.1m, Length: 0.5m, Height: 0.1m -->
+      </geometry>
+      <material name="rectangle_left_color"/>
+      <!-- Align the rectangular link to point towards the right pillar -->
+      <origin xyz="-0.5 0 0" rpy="0 0 0"/> <!-- 90 degrees around the Y-axis to point towards the right pillar -->
+    </visual>
+  </link>
+
+  <!-- New Rectangular Link 2 (attached to right cylinder) -->
+  <link name="rectangle_right">
+    <visual>
+      <geometry>
+        <box size="0.5 0.1 0.1"/>  <!-- Width: 0.1m, Length: 0.5m, Height: 0.1m -->
+      </geometry>
+      <material name="rectangle_right_color"/>
+      <!-- Align the rectangular link to point towards the left pillar -->
+      <origin xyz="0.5 0 0" rpy="0 0 0"/> <!-- 90 degrees around the Y-axis to point towards the left pillar -->
+    </visual>
+  </link>
+
+  <!-- Joints to attach pillars to the base -->
+  <joint name="joint_left" type="fixed">
+    <parent link="base"/>
+    <child link="pillar_left"/>
+    <origin xyz="1 0 0" rpy="0 0 0"/> <!-- Offset to the left end of the base -->
+  </joint>
+
+  <joint name="joint_right" type="fixed">
+    <parent link="base"/>
+    <child link="pillar_right"/>
+    <origin xyz="-1 0 0" rpy="0 0 0"/> <!-- Offset to the right end of the base -->
+  </joint>
+
+  <!-- Joints to allow the cylinders to move along the pillars -->
+  <joint name="prismatic_left" type="prismatic">
+    <parent link="pillar_left"/>
+    <child link="cylinder_left"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/> <!-- Start position above pillar -->
+    <axis xyz="0 0 1"/> <!-- Motion along the Z-axis (up and down) -->
+    <limit lower="0" upper="2" effort="10" velocity="1"/> <!-- Allows movement from 0 to 2 meters -->
+  </joint>
+
+  <joint name="prismatic_right" type="prismatic">
+    <parent link="pillar_right"/>
+    <child link="cylinder_right"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/> <!-- Start position above pillar -->
+    <axis xyz="0 0 1"/> <!-- Motion along the Z-axis (up and down) -->
+    <limit lower="0" upper="2" effort="10" velocity="1"/> <!-- Allows movement from 0 to 2 meters -->
+  </joint>
+
+  <!-- Revolute Joint for left rectangular link (Vertical axis of revolution) -->
+  <joint name="revolute_left" type="revolute">
+    <parent link="cylinder_left"/>
+    <child link="rectangle_left"/>
+    <origin xyz="0.0 0 0" rpy="0 0 0"/> <!-- Revolute joint at the top of the cylinder -->
+    <axis xyz="0 1 0"/> <!-- Rotation around the Y-axis (vertical) -->
+    <limit lower="-1.5708" upper="1.5708" effort="10" velocity="1"/> <!-- +-90 degrees rotation -->
+    <mimic joint="prismatic_left" multiplier="-1.57"/>
+  </joint>
+
+  <!-- Revolute Joint for right rectangular link (Vertical axis of revolution) -->
+  <joint name="revolute_right" type="revolute">
+    <parent link="cylinder_right"/>
+    <child link="rectangle_right"/>
+    <origin xyz="0.0 0 0" rpy="0 0 0"/> <!-- Revolute joint at the top of the cylinder -->
+    <axis xyz="0 1 0"/> <!-- Rotation around the Y-axis (vertical) -->
+    <limit lower="-1.5708" upper="1.5708" effort="10" velocity="1"/> <!-- +-90 degrees rotation -->
+  </joint>
+
+  <!-- Material Definitions -->
+  <material name="grey">
+    <color rgba="0.5 0.5 0.5 1"/> <!-- Grey color -->
+  </material>
+
+  <material name="pillar_left_color">
+    <color rgba="1 0 0 1"/> <!-- Red color for the left pillar -->
+  </material>
+
+  <material name="pillar_right_color">
+    <color rgba="0 0 1 1"/> <!-- Blue color for the right pillar -->
+  </material>
+
+  <material name="cylinder_left_color">
+    <color rgba="0 1 0 1"/> <!-- Green color for the left cylinder -->
+  </material>
+
+  <material name="cylinder_right_color">
+    <color rgba="1 1 0 1"/> <!-- Yellow color for the right cylinder -->
+  </material>
+
+  <material name="rectangle_left_color">
+    <color rgba="1 0.5 0 1"/> <!-- Orange color for the left rectangle -->
+  </material>
+
+  <material name="rectangle_right_color">
+    <color rgba="0.5 0.5 1 1"/> <!-- Purple color for the right rectangle -->
+  </material>
+
+</robot>

@@ -1,0 +1,27 @@
+// See https://containers.dev/implementors/json_reference/ for configuration reference
+{
+    "name": "ROS Urdf Testing",
+    "build": {
+        "context": "../..",
+        "dockerfile": "Dockerfile"
+    },
+    "remoteUser": "vscode",
+    "forwardPorts": [
+        3000
+    ],
+    "mounts": [
+        "source=.,target=/workspaces/visualizer,type=bind"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/bin/bash"
+                    }
+                }
+            }
+        }
+    }
+}
