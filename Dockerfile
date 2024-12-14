@@ -16,6 +16,8 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 USER ${USERNAME}:${USERNAME}
 
+SHELL ["/bin/bash", "-c"]
+
 WORKDIR /workspaces/visualizer
 
-CMD ["./ros_entrypoint.sh"]
+CMD ["." "/ros_entrypoint.sh"]
